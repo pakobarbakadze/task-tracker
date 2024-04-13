@@ -1,11 +1,18 @@
 <template>
   <div class="tracker">
-    <Header title="Task Tracker" />
+    <Header
+      title="Task Tracker"
+      :showAddTask
+      @show-add-task="showAddTask = !showAddTask"
+    />
     <Tasks
       :tasks="tasks"
       @delete-task="deleteTask"
       @toggle-reminder="toggleReminder"
     />
+    <div v-if="showAddTask">
+      <AddTask @add-task="addTask"></AddTask>
+    </div>
   </div>
 </template>
 
@@ -13,6 +20,7 @@
 import { defineComponent } from "vue";
 import Header from "./Header.vue";
 import Tasks from "./Tasks.vue";
+import AddTask from "./AddTask.vue";
 
 import type { task } from "@/types/task";
 
@@ -21,10 +29,12 @@ export default defineComponent({
   components: {
     Header,
     Tasks,
+    AddTask,
   },
   data() {
     return {
       tasks: [] as task[],
+      showAddTask: false,
     };
   },
   created() {
@@ -58,15 +68,20 @@ export default defineComponent({
         task.id === id ? { ...task, reminder: !task.reminder } : task
       );
     },
+    addTask(newTask: task) {
+      this.tasks = [...this.tasks, newTask];
+    },
   },
+  emits: ["add-task"],
 });
 </script>
 
 <style scoped>
 .tracker {
   width: 90vw;
+  max-width: 600px;
   border: 1px solid black;
   margin: 20px auto;
-  padding: 20px 5px;
+  padding: 20px;
 }
 </style>

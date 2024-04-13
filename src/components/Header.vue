@@ -1,7 +1,11 @@
 <template>
   <div class="tracker_header">
     <h1>{{ title }}</h1>
-    <Button text="Add" color="green" />
+    <Button
+      :text="showAddTask ? 'Close' : 'Add Task'"
+      color="green"
+      @btn-click="$emit('show-add-task')"
+    />
   </div>
 </template>
 
@@ -16,10 +20,15 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    showAddTask: {
+      type: Boolean,
+      required: true,
+    },
   },
   components: {
     Button,
   },
+  emits: ["show-add-task"],
 });
 </script>
 

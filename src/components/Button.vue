@@ -1,5 +1,7 @@
 <template>
-  <button @click="onClick()" :style="{ background: color }">{{ text }}</button>
+  <button @click="$emit('btn-click')" :style="{ background: color }">
+    {{ text }}
+  </button>
 </template>
 
 <script lang="ts">
@@ -17,22 +19,17 @@ export default defineComponent({
       default: "black",
     },
   },
-  methods: {
-    onClick() {
-      console.log("Button clicked");
-    },
-  },
 });
 </script>
 
 <style scoped>
 button {
-  width: 50px;
-  height: 25px;
   margin: auto 0px;
+  padding: 10px 20px;
   background-color: black;
   color: white;
   border: none;
   border-radius: 5px;
+  cursor: pointer;
 }
 </style>
