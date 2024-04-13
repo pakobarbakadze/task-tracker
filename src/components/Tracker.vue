@@ -23,6 +23,8 @@ import Tasks from "./Tasks.vue";
 import AddTask from "./AddTask.vue";
 
 import type { task } from "@/types/task";
+import { api } from "@/utils/constants";
+import axios from "axios";
 
 export default defineComponent({
   name: "Tracker",
@@ -37,39 +39,30 @@ export default defineComponent({
       showAddTask: false,
     };
   },
-  created() {
-    this.tasks = [
-      {
-        id: 1,
-        text: "Doctors Appointment",
-        day: "May 5th at 2:30pm",
-        reminder: true,
-      },
-      {
-        id: 2,
-        text: "Meeting at School",
-        day: "May 6th at 1:30pm",
-        reminder: true,
-      },
-      {
-        id: 3,
-        text: "Food Shopping",
-        day: "May 7th at 12:30pm",
-        reminder: false,
-      },
-    ];
+  async created() {
+    this.tasks = await this.getTasks();
   },
   methods: {
-    deleteTask(id: number) {
-      this.tasks = this.tasks.filter((task) => task.id !== id);
+    async deleteTask(id: number) {
+      await axios.delete(`${api}/tasks/${id}`);
+      this.tasks = await this.getTasks();
     },
-    toggleReminder(id: number) {
-      this.tasks = this.tasks.map((task) =>
-        task.id === id ? { ...task, reminder: !task.reminder } : task
-      );
+    async toggleReminder(id: number) {
+      const task = await this.getTask(id);
+      await axios.patch(`${api}/tasks/${id}`, {
+        reminder: !task.reminder,
+      });
+      this.tasks = await this.getTasks();
     },
-    addTask(newTask: task) {
-      this.tasks = [...this.tasks, newTask];
+    async addTask(newTask: task) {
+      await axios.post(`${api}/tasks`, newTask);
+      this.tasks = await this.getTasks();
+    },
+    async getTasks() {
+      return (await axios.get(`${api}/tasks`)).data;
+    },
+    async getTask(id: number) {
+      return (await axios.get(`${api}/tasks/${id}`)).data;
     },
   },
   emits: ["add-task"],
