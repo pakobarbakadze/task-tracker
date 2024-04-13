@@ -39,7 +39,6 @@ export default defineComponent({
       }
 
       const newTask = {
-        id: Math.floor(Math.random() * 10000) + 1,
         text: this.task,
         day: this.day,
         reminder: this.reminder,

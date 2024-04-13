@@ -2,8 +2,8 @@
   <div class="tracker">
     <Header
       title="Task Tracker"
-      :showAddTask
-      @show-add-task="showAddTask = !showAddTask"
+      :showAddTask="showAddTask"
+      @show-add-task="toggleAddTask"
     />
     <Tasks
       :tasks="tasks"
@@ -21,10 +21,8 @@ import { defineComponent } from "vue";
 import Header from "./Header.vue";
 import Tasks from "./Tasks.vue";
 import AddTask from "./AddTask.vue";
-
-import type { task } from "@/types/task";
-import { api } from "@/utils/constants";
-import axios from "axios";
+import { taskService } from "@/services/taskService";
+import type { TaskType } from "@/types/task";
 
 export default defineComponent({
   name: "Tracker",
@@ -35,34 +33,29 @@ export default defineComponent({
   },
   data() {
     return {
-      tasks: [] as task[],
+      tasks: [] as TaskType[],
       showAddTask: false,
     };
   },
   async created() {
-    this.tasks = await this.getTasks();
+    this.tasks = await taskService.getTasks();
   },
   methods: {
     async deleteTask(id: number) {
-      await axios.delete(`${api}/tasks/${id}`);
-      this.tasks = await this.getTasks();
+      await taskService.deleteTask(id);
+      this.tasks = await taskService.getTasks();
     },
     async toggleReminder(id: number) {
-      const task = await this.getTask(id);
-      await axios.patch(`${api}/tasks/${id}`, {
-        reminder: !task.reminder,
-      });
-      this.tasks = await this.getTasks();
+      const task = await taskService.getTask(id);
+      await taskService.updateTask(id, { reminder: !task?.reminder });
+      this.tasks = await taskService.getTasks();
     },
-    async addTask(newTask: task) {
-      await axios.post(`${api}/tasks`, newTask);
-      this.tasks = await this.getTasks();
+    async addTask(newTask: TaskType) {
+      await taskService.createTask(newTask);
+      this.tasks = await taskService.getTasks();
     },
-    async getTasks() {
-      return (await axios.get(`${api}/tasks`)).data;
-    },
-    async getTask(id: number) {
-      return (await axios.get(`${api}/tasks/${id}`)).data;
+    toggleAddTask() {
+      this.showAddTask = !this.showAddTask;
     },
   },
   emits: ["add-task"],

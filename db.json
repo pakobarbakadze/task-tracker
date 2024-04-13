@@ -10,11 +10,11 @@
       "id": "3",
       "text": "Food Shopping",
       "day": "May 7th at 12:30pm",
-      "reminder": true
+      "reminder": false
     },
     {
-      "id": 8814,
-      "text": "Studing",
+      "id": "cfaa",
+      "text": "Task 1",
       "day": "April 25 at 11:30pm",
       "reminder": true
     }

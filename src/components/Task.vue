@@ -13,13 +13,13 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import type { task } from "@/types/task";
+import type { TaskType } from "@/types/task";
 
 export default defineComponent({
   name: "Task",
   props: {
     task: {
-      type: Object as () => task,
+      type: Object as () => TaskType,
       required: true,
     },
   },

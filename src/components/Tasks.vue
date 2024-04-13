@@ -10,14 +10,14 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import type { task } from "@/types/task";
+import type { TaskType } from "@/types/task";
 import Task from "./Task.vue";
 
 export default defineComponent({
   name: "Tasks",
   props: {
     tasks: {
-      type: Array as () => task[],
+      type: Array as () => TaskType[],
       required: true,
     },
   },
