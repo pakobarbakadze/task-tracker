@@ -1,24 +1,22 @@
 <template>
   <div class="tracker">
     <Header title="Task Tracker" />
+    <Tasks :tasks="tasks" @delete-task="deleteTask" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import Header from "./Header.vue";
+import Tasks from "./Tasks.vue";
 
-type task = {
-  id: number;
-  text: string;
-  day: string;
-  reminder: boolean;
-};
+import type { task } from "@/types/task";
 
 export default defineComponent({
   name: "Tracker",
   components: {
     Header,
+    Tasks,
   },
   data() {
     return {
@@ -46,6 +44,11 @@ export default defineComponent({
         reminder: false,
       },
     ];
+  },
+  methods: {
+    deleteTask(id: number) {
+      this.tasks = this.tasks.filter((task) => task.id !== id);
+    },
   },
 });
 </script>
